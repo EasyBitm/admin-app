@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, Upload } from "lucide-react";
 import Breadcrumbs from "../../../src/components/Breadcrumbs";
 import {
   createSubject,
@@ -13,6 +13,7 @@ import {
   type Difficulty,
   type Semester,
 } from "../../../src/lib/data";
+import { uploadResourceFile } from "../../../src/lib/storage";
 
 const difficulties: Difficulty[] = ["Easy", "Medium", "Hard"];
 
@@ -29,11 +30,14 @@ export default function AdminSemesterPage({
   const [chapters, setChapters] = useState(1);
   const [difficulty, setDifficulty] = useState<Difficulty>("Medium");
   const [saving, setSaving] = useState(false);
+  const [overallSyllabusUrl, setOverallSyllabusUrl] = useState("");
+  const [uploadingSyllabus, setUploadingSyllabus] = useState(false);
 
   async function load() {
     setLoading(true);
     const data = await getSemester(slug);
     setSemester(data);
+    setOverallSyllabusUrl(data?.overall_syllabus_url ?? "");
     setLoading(false);
   }
 
@@ -74,6 +78,29 @@ export default function AdminSemesterPage({
     load();
   }
 
+  async function handleOverallSyllabusUpload(file: File | undefined) {
+    if (!file) return;
+    setUploadingSyllabus(true);
+    try {
+      setOverallSyllabusUrl(await uploadResourceFile(file));
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploadingSyllabus(false);
+    }
+  }
+
+  async function handleSaveOverallSyllabus(e: React.FormEvent) {
+    e.preventDefault();
+    if (!semester) return;
+    setSaving(true);
+    await updateSemester(semester.id, {
+      overall_syllabus_url: overallSyllabusUrl.trim() || null,
+    });
+    setSaving(false);
+    load();
+  }
+
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-4xl px-6 py-16 text-sm text-muted">
@@ -105,6 +132,43 @@ export default function AdminSemesterPage({
         className="mt-6 w-full rounded-lg border border-transparent bg-transparent text-3xl font-bold tracking-tight outline-none focus:border-border focus:bg-surface focus:px-2 focus:py-1"
       />
       <p className="mt-1 text-sm text-muted">/{semester.slug}</p>
+
+      <form
+        onSubmit={handleSaveOverallSyllabus}
+        className="mt-8 rounded-xl border border-border bg-surface p-4"
+      >
+        <h2 className="font-semibold">Overall syllabus</h2>
+        <p className="mt-1 text-sm text-muted">
+          Add the syllabus PDF for the whole semester.
+        </p>
+        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto]">
+          <input
+            value={overallSyllabusUrl}
+            onChange={(e) => setOverallSyllabusUrl(e.target.value)}
+            placeholder="PDF URL (or upload a file)"
+            disabled={uploadingSyllabus}
+            className="rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent disabled:opacity-50"
+          />
+          <label className="flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-dashed border-border px-3 py-2 text-sm text-muted transition-colors hover:bg-background">
+            <Upload size={14} />
+            {uploadingSyllabus ? "Uploading…" : "Upload PDF"}
+            <input
+              type="file"
+              accept="application/pdf"
+              disabled={uploadingSyllabus}
+              onChange={(e) => handleOverallSyllabusUpload(e.target.files?.[0])}
+              className="hidden"
+            />
+          </label>
+          <button
+            type="submit"
+            disabled={saving || uploadingSyllabus}
+            className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent/90 disabled:opacity-50"
+          >
+            Save syllabus
+          </button>
+        </div>
+      </form>
 
       <form
         onSubmit={handleAddSubject}

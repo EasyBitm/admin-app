@@ -10,6 +10,7 @@ import {
   deleteResource,
   getSubject,
   updateLesson,
+  updateSubject,
   updateResource,
   type ResourceKind,
   type SubjectWithResources,
@@ -42,6 +43,7 @@ export default function AdminSubjectPage({
   const [uploading, setUploading] = useState(false);
   const [lessonTitle, setLessonTitle] = useState("");
   const [lessonHours, setLessonHours] = useState("");
+  const [oneshotVideoUrl, setOneshotVideoUrl] = useState("");
 
   async function handleFile(file: File | undefined) {
     if (!file) return;
@@ -60,6 +62,7 @@ export default function AdminSubjectPage({
     setLoading(true);
     const data = await getSubject(subjectId);
     setSubject(data);
+    setOneshotVideoUrl(data?.oneshot_video_url ?? "");
     setLoading(false);
   }
 
@@ -119,6 +122,17 @@ export default function AdminSubjectPage({
     load();
   }
 
+  async function handleSaveOneshotVideo(e: React.FormEvent) {
+    e.preventDefault();
+    if (!subject) return;
+    setSaving(true);
+    await updateSubject(subject.id, {
+      oneshot_video_url: oneshotVideoUrl.trim() || null,
+    });
+    setSaving(false);
+    load();
+  }
+
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-4xl px-6 py-16 text-sm text-muted">
@@ -159,6 +173,31 @@ export default function AdminSubjectPage({
       <p className="mt-1 text-sm text-muted">
         {subject.code} · Manage notes, syllabus, videos, and question papers.
       </p>
+
+      <form
+        onSubmit={handleSaveOneshotVideo}
+        className="mt-8 rounded-xl border border-border bg-surface p-4"
+      >
+        <h2 className="font-semibold">One-shot video</h2>
+        <p className="mt-1 text-sm text-muted">
+          Add one YouTube or video URL for this subject.
+        </p>
+        <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+          <input
+            value={oneshotVideoUrl}
+            onChange={(e) => setOneshotVideoUrl(e.target.value)}
+            placeholder="YouTube video URL"
+            className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
+          />
+          <button
+            type="submit"
+            disabled={saving}
+            className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent/90 disabled:opacity-50"
+          >
+            Save video
+          </button>
+        </div>
+      </form>
 
       <h2 className="mt-10 text-lg font-semibold">Course Outline (Lessons)</h2>
       <form
