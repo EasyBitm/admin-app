@@ -14,6 +14,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { Lesson, Resource, ResourceKind } from "../lib/data";
+import VideoModal from "./VideoModal";
 
 type TabKind = ResourceKind | "lessons";
 
