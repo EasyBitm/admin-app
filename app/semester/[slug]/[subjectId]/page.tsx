@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import Header from "../../../../src/components/Header";
 import Footer from "../../../../src/components/Footer";
 import Breadcrumbs from "../../../../src/components/Breadcrumbs";
@@ -12,6 +13,37 @@ import {
 } from "../../../../src/lib/data";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string; subjectId: string }>;
+}): Promise<Metadata> {
+  const { slug, subjectId } = await params;
+  const [subject, semester] = await Promise.all([
+    getSubject(subjectId),
+    getSemester(slug),
+  ]);
+
+  if (!subject) {
+    return {
+      title: "Subject Not Found",
+      description: "The requested BITM subject could not be found.",
+    };
+  }
+
+  const semesterName = semester?.name ?? "BITM";
+  const description = `${subject.name} (${subject.code}) notes, lessons, syllabus, videos, and question papers for ${semesterName}.`;
+
+  return {
+    title: `${subject.name} Notes and Resources`,
+    description,
+    openGraph: {
+      title: `${subject.name} Notes and Resources | easyBITM`,
+      description,
+    },
+  };
+}
 
 const difficultyStyles: Record<Difficulty, string> = {
   Easy: "bg-accent/15 text-accent",

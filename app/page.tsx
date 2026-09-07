@@ -1,10 +1,22 @@
 // import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import Header from "../src/components/Header";
 import Footer from "../src/components/Footer";
 import { getSemesters } from "../src/lib/data";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "BITM Notes, Resources & Study Materials",
+  description:
+    "Find organized notes, lessons, syllabi, videos, and question papers for Bachelor in Information Technology and Management students.",
+  openGraph: {
+    title: "BITM Notes, Resources & Study Materials | easyBITM",
+    description:
+      "Organized semester resources and study materials for BITM students.",
+  },
+};
 
 export default async function Home() {
   const semesters = await getSemesters({ includeHidden: true });

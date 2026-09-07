@@ -1,10 +1,38 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import Header from "../../../../src/components/Header";
 import Footer from "../../../../src/components/Footer";
 import Breadcrumbs from "../../../../src/components/Breadcrumbs";
 import { getSemester } from "../../../../src/lib/data";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const semester = await getSemester(slug);
+
+  if (!semester) {
+    return {
+      title: "Syllabus Not Found",
+      description: "The requested BITM syllabus could not be found.",
+    };
+  }
+
+  const description = `View the complete ${semester.name} BITM syllabus for Bachelor in Information Technology and Management students.`;
+
+  return {
+    title: `${semester.name} Overall Syllabus`,
+    description,
+    openGraph: {
+      title: `${semester.name} Overall Syllabus | easyBITM`,
+      description,
+    },
+  };
+}
 
 export default async function OverallSyllabusPage({
   params,

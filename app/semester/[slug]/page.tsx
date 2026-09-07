@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BookOpen, Layers } from "lucide-react";
 import Header from "../../../src/components/Header";
@@ -8,6 +9,33 @@ import MediaModalButton from "../../../src/components/MediaModalButton";
 import { getSemester, type Difficulty } from "../../../src/lib/data";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const semester = await getSemester(slug);
+
+  if (!semester) {
+    return {
+      title: "Semester Not Found",
+      description: "The requested BITM semester could not be found.",
+    };
+  }
+
+  const description = `${semester.name} BITM notes, subjects, syllabus, videos, and question papers for Bachelor in Information Technology and Management students.`;
+
+  return {
+    title: `${semester.name} Resources`,
+    description,
+    openGraph: {
+      title: `${semester.name} Resources | easyBITM`,
+      description,
+    },
+  };
+}
 
 const difficultyStyles: Record<Difficulty, string> = {
   Easy: "bg-accent/15 text-accent",

@@ -1,7 +1,19 @@
 import { Bell } from "lucide-react";
+import type { Metadata } from "next";
 import Header from "../../src/components/Header";
 import Footer from "../../src/components/Footer";
 import Breadcrumbs from "../../src/components/Breadcrumbs";
+
+export const metadata: Metadata = {
+  title: "BITM Notices and Announcements",
+  description:
+    "Stay up to date with BITM announcements, exam information, deadlines, and important student updates.",
+  openGraph: {
+    title: "BITM Notices and Announcements | easyBITM",
+    description:
+      "Important announcements, exam information, deadlines, and updates for BITM students.",
+  },
+};
 
 export default function NoticesPage() {
   return (

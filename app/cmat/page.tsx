@@ -1,7 +1,19 @@
 import { GraduationCap } from "lucide-react";
+import type { Metadata } from "next";
 import Header from "../../src/components/Header";
 import Footer from "../../src/components/Footer";
 import Breadcrumbs from "../../src/components/Breadcrumbs";
+
+export const metadata: Metadata = {
+  title: "CMAT Preparation",
+  description:
+    "Explore CMAT preparation resources and study guides for the Common Management Admission Test.",
+  openGraph: {
+    title: "CMAT Preparation | easyBITM",
+    description:
+      "CMAT preparation resources and study guides for aspiring BITM students.",
+  },
+};
 
 export default function CmatPage() {
   return (
