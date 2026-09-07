@@ -4,7 +4,7 @@ import { getSemesters } from "../src/lib/data";
 export const dynamic = "force-dynamic";
 
 const siteUrl = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://easybitm.com"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://easybitm.vercel.app/"
 ).replace(/\/$/, "");
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
