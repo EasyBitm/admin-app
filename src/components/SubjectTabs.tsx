@@ -7,11 +7,13 @@ import {
   ListChecks,
   Video,
   ImageIcon,
+  Pause,
   Play,
+  Volume2,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import type { Lesson, Resource, ResourceKind } from "../lib/data";
-import VideoModal from "./VideoModal";
 
 type TabKind = ResourceKind | "lessons";
 
@@ -68,11 +70,66 @@ export default function SubjectTabs({
     availableKinds[0] ?? null,
   );
   const [expandedLessonId, setExpandedLessonId] = useState<string | null>(null);
-  const [hoveredLessonId, setHoveredLessonId] = useState<string | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<Resource | null>(null);
   const [selectedPdf, setSelectedPdf] = useState<Resource | null>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+  const videoFrameRef = useRef<HTMLIFrameElement>(null);
+  const videoShieldTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pdfModalRef = useRef<HTMLDivElement>(null);
   const [isPdfFullscreen, setIsPdfFullscreen] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
+  const [showVideoShield, setShowVideoShield] = useState(true);
+  const [videoVolume, setVideoVolume] = useState(100);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  function getVideoEmbedUrl(url: string) {
+    const match = url.match(
+      /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/,
+    );
+    return match
+      ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&controls=1&rel=0&playsinline=1`
+      : url;
+  }
+
+  function sendVideoCommand(command: string, args: number[] = []) {
+    if (!videoFrameRef.current?.contentWindow) return;
+
+    videoFrameRef.current.contentWindow.postMessage(
+      JSON.stringify({ event: "command", func: command, args }),
+      "*",
+    );
+  }
+
+  function showVideoShieldFor(duration: number) {
+    setShowVideoShield(true);
+    if (videoShieldTimeoutRef.current) {
+      clearTimeout(videoShieldTimeoutRef.current);
+    }
+
+    videoShieldTimeoutRef.current = setTimeout(() => {
+      setShowVideoShield(false);
+    }, duration);
+  }
+
+  useEffect(() => {
+    function handleFullscreenChange() {
+      const fullscreen = document.fullscreenElement === videoContainerRef.current;
+      setIsFullscreen(fullscreen);
+      setIsPdfFullscreen(document.fullscreenElement === pdfModalRef.current);
+    }
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (videoShieldTimeoutRef.current) {
+        clearTimeout(videoShieldTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     function handleFullscreenChange() {
@@ -117,9 +174,16 @@ export default function SubjectTabs({
   const videoItems = groups.find((g) => g.kind === "video")?.items ?? [];
 
   const syllabusItems = groups.find((g) => g.kind === "syllabus")?.items ?? [];
-  const [syllabusId, setSyllabusId] = useState<string | null>(null);
-  const activeSyllabus =
-    syllabusItems.find((item) => item.id === syllabusId) ?? syllabusItems[0];
+  const activeSyllabus = syllabusItems[0];
+
+  function openVideo(item: Resource) {
+    setSelectedVideo(item);
+    setIsVideoPlaying(true);
+    setVideoVolume(100);
+    setIsFullscreen(false);
+    setShowVideoShield(true);
+    showVideoShieldFor(6000);
+  }
 
   return (
     <div className="mt-8">
@@ -187,7 +251,7 @@ export default function SubjectTabs({
                   </span>
                 </button>
 
-                {(expandedLessonId === lesson.id || hoveredLessonId === lesson.id) && (
+                {expandedLessonId === lesson.id && (
                   <div className="border-t border-border px-4 py-4">
                     {videoItems.filter((item) => (item.lesson ?? 0) === i + 1)
                       .length > 0 ? (
@@ -204,7 +268,7 @@ export default function SubjectTabs({
                                 rel="noopener noreferrer"
                                 onClick={(event) => {
                                   event.preventDefault();
-                                  setSelectedVideo(item);
+                                  openVideo(item);
                                 }}
                                 className="group overflow-hidden rounded-xl border border-border bg-surface-2"
                               >
