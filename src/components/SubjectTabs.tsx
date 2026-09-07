@@ -232,7 +232,7 @@ export default function SubjectTabs({
                       expandedLessonId === lesson.id ? null : lesson.id,
                     )
                   }
-                  className="no-red-hover flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
+                  className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
                   aria-expanded={expandedLessonId === lesson.id}
                 >
                   <span>
@@ -431,117 +431,11 @@ export default function SubjectTabs({
       </div>
 
       {selectedVideo && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
-          role="presentation"
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={selectedVideo.title}
-            className="relative w-full max-w-4xl overflow-hidden rounded-xl border border-border bg-surface shadow-2xl"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setSelectedVideo(null)}
-              aria-label="Close video"
-              className="no-red-hover absolute right-3 top-3 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80"
-            >
-              <X size={20} />
-            </button>
-            <div
-              ref={videoContainerRef}
-              className="relative aspect-video w-full bg-black"
-            >
-              <iframe
-                ref={videoFrameRef}
-                src={getVideoEmbedUrl(selectedVideo.url)}
-                title={selectedVideo.title}
-                tabIndex={-1}
-                className="pointer-events-none h-full w-full"
-                allow="autoplay; encrypted-media; picture-in-picture"
-              />
-              {showVideoShield && (
-                <>
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 top-0 z-10 flex h-20 items-center gap-2 bg-black/60 px-5 backdrop-blur-sm"
-                  >
-                    <Image
-                      src="/logo.png"
-                      alt=""
-                      width={36}
-                      height={36}
-                      className="h-9 w-9 rounded-full object-cover"
-                      unoptimized
-                    />
-                    <span className="text-lg font-semibold tracking-tight text-white">
-                      easy<span className="text-accent">BITM</span>
-                    </span>
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-black/60 backdrop-blur-sm"
-                  />
-                </>
-              )}
-              <div className="absolute inset-x-0 bottom-0 z-20 flex items-center gap-3 bg-gradient-to-t from-black/80 to-transparent px-4 pb-3 pt-8 text-white fullscreen:gap-2 fullscreen:px-2 fullscreen:pb-1 fullscreen:pt-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    const command = isVideoPlaying ? "pauseVideo" : "playVideo";
-                    sendVideoCommand(command);
-                    setIsVideoPlaying(!isVideoPlaying);
-                    showVideoShieldFor(6000);
-                  }}
-                  aria-label={isVideoPlaying ? "Pause video" : "Play video"}
-                  className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-white/20 fullscreen:h-7 fullscreen:w-7"
-                >
-                  {isVideoPlaying ? <Pause size={18} /> : <Play size={18} />}
-                </button>
-                <Volume2 size={17} />
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={videoVolume}
-                  onChange={(event) => {
-                    const volume = Number(event.target.value);
-                    setVideoVolume(volume);
-                    sendVideoCommand("setVolume", [volume]);
-                  }}
-                  aria-label="Video volume"
-                  className="h-1 w-24 accent-white fullscreen:w-16"
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (document.fullscreenElement) {
-                      document.exitFullscreen();
-                    } else {
-                      videoContainerRef.current?.requestFullscreen();
-                    }
-                  }}
-                  aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen video"}
-                  className="ml-auto rounded-full px-3 py-2 text-xs font-medium transition-colors hover:bg-white/20 fullscreen:px-2 fullscreen:py-1"
-                >
-                  {isFullscreen ? "Exit full screen" : "Full screen"}
-                </button>
-              </div>
-            </div>
-            <div className="flex items-center justify-between gap-4 px-4 py-3">
-              <div className="text-sm font-medium">{selectedVideo.title}</div>
-              <button
-                type="button"
-                onClick={() => setSelectedVideo(null)}
-                className="no-red-hover shrink-0 rounded-full border border-border px-4 py-2 text-sm font-medium transition-colors hover-red"
-              >
-                Close video
-              </button>
-            </div>
-          </div>
-        </div>
+        <VideoModal
+          url={selectedVideo.url}
+          title={selectedVideo.title}
+          onClose={() => setSelectedVideo(null)}
+        />
       )}
 
       {selectedPdf && (
@@ -582,14 +476,14 @@ export default function SubjectTabs({
                     }
                   }}
                   aria-label={isPdfFullscreen ? "Exit PDF fullscreen" : "Fullscreen PDF"}
-                  className="no-red-hover rounded-full border border-border px-3 py-2 text-xs font-medium transition-colors hover-red"
+                  className="rounded-full border border-border px-3 py-2 text-xs font-medium transition-colors hover:bg-surface-2"
                 >
                   {isPdfFullscreen ? "Exit full screen" : "Full screen"}
                 </button>
                 <button
                   type="button"
                   onClick={() => setSelectedPdf(null)}
-                  className="rounded-full border border-border px-4 py-2 text-sm font-medium transition-colors hover-red"
+                  className="rounded-full border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-2"
                 >
                   Close PDF
                 </button>
