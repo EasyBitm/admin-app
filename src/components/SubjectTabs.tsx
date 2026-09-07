@@ -188,7 +188,7 @@ export default function SubjectTabs({
 
   return (
     <div className="mt-8">
-      <div className="flex items-center gap-12 lg:fixed lg:left-8 lg:top-1/2 lg:mt-0 lg:z-10 lg:flex-col lg:items-start lg:gap-8 lg:-translate-y-1/2">
+      <div className="flex items-center gap-5 overflow-x-auto sm:gap-12 lg:fixed lg:left-8 lg:top-1/2 lg:z-10 lg:mt-0 lg:flex-col lg:items-start lg:gap-8 lg:overflow-visible lg:-translate-y-1/2">
         {tabOrder.map((kind) => {
           const { label, icon: Icon } = kindMeta[kind];
           const isAvailable = availableKinds.includes(kind);
@@ -199,7 +199,7 @@ export default function SubjectTabs({
               type="button"
               disabled={!isAvailable}
               onClick={() => setActive(kind)}
-              className={`flex items-center gap-1.5 border-b-2 pb-3 text-sm font-medium transition-colors ${
+              className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 pb-3 text-sm font-medium transition-colors ${
                 isActive
                   ? "border-accent text-accent"
                   : isAvailable

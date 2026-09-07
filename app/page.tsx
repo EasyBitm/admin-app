@@ -24,7 +24,7 @@ export default async function Home() {
     <div className="flex flex-col flex-1">
       <Header />
 
-      <section className="relative mx-auto w-full max-w-6xl px-6 py-28 lg:py-36">
+      <section className="relative mx-auto w-full max-w-6xl overflow-hidden px-6 py-20 sm:py-28 lg:py-36">
         {/* Decorative orbs */}
         <div aria-hidden="true" className="absolute right-[-10%] top-[-20%] h-72 w-72 rounded-full bg-accent-2/20 blur-3xl" />
         <div aria-hidden="true" className="absolute left-[-8%] bottom-[-10%] h-56 w-56 rounded-full bg-accent/10 blur-3xl" />
@@ -39,11 +39,7 @@ export default async function Home() {
 
         <div className="relative flex flex-col items-center justify-center gap-12 lg:items-start lg:gap-16">
           <div className="max-w-xl lg:max-w-none">
-            <div className="inline-block rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium text-accent before:content-[''] before:absolute before:-left-1 before:top-1/2 before:h-4 before:w-4 before:rotate-45 before:bg-accent/10 before:-translate-y-1/2">
-              Tribhuvan University · BITM
-            </div>
-
-            <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="hero-title mt-0 text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
               <span className="inline-block transition-all duration-700 ease-out hover:translate-x-1 hover:underline underline-offset-4 decoration-accent/40">
                 Your <span className="text-accent">simple</span> guide
               </span>
@@ -51,7 +47,7 @@ export default async function Home() {
               to ace every semester.
             </h1>
 
-            <p className="mt-5 max-w-lg text-muted leading-relaxed">
+            <p className="hero-subtitle mt-5 max-w-lg text-muted leading-relaxed">
               Notes, guides, and organized resources — so you can focus on
               learning instead of hunting for materials.
             </p>
@@ -86,9 +82,9 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Quote card */}
-        <div className="absolute right-0 top-1/2 h-96 w-72 -translate-y-1/2 lg:right-0 lg:w-80">
-          <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl border border-border bg-surface p-8 shadow-lg transition-shadow duration-300 hover:shadow-xl">
+        {/* Quote card — stacked below hero on mobile, floating at right on desktop */}
+        <div className="relative mt-2 flex w-full justify-center lg:absolute lg:right-0 lg:top-1/2 lg:mt-0 lg:h-96 lg:w-80 lg:-translate-y-1/2">
+          <div className="flex h-full w-full max-w-xs flex-col items-center justify-center rounded-2xl border border-border bg-surface p-8 shadow-lg transition-shadow duration-300 hover:shadow-xl lg:max-w-none">
             <div className="h-10 w-10 items-center justify-center rounded-full bg-accent/15 text-accent">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 12a8 8 0 1 1 16 0a8 8 0 0 1-16 0" />
@@ -105,7 +101,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="semesters" className="mx-auto h-screen w-full max-w-6xl px-6 py-16">
+      <section id="semesters" className="mx-auto min-h-screen w-full max-w-6xl px-6 py-16">
         <h2 className="text-2xl mt-10 font-semibold">Semesters</h2>
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {semesters.map((s) => (

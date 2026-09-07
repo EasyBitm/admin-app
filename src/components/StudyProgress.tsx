@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BookOpen,
   CheckCircle2,
@@ -145,9 +145,11 @@ export default function StudyProgress({
     }
   };
 
-  useState(() => {
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadData();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Load progress entries for a study
   const loadProgressEntries = async (studyId: string) => {
@@ -273,6 +275,7 @@ export default function StudyProgress({
       });
 
       setProfileDirty(false);
+      setShowEditProfile(false);
       alert("Profile updated!");
     } catch (err) {
       console.error("Failed to update profile:", err);
@@ -302,10 +305,7 @@ export default function StudyProgress({
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => {
-              setEditName(editName);
-              setEditBio(editBio);
-            }}
+            onClick={() => setShowEditProfile(true)}
             className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-sm transition-colors hover:border-accent"
           >
             <Edit2 size={14} />
@@ -323,8 +323,8 @@ export default function StudyProgress({
 
       {/* Edit Profile Modal */}
       {showEditProfile && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-xl border border-border bg-surface p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-xl border border-border bg-surface p-6 shadow-xl">
             <h2 className="text-lg font-semibold">Edit Profile</h2>
             <div className="mt-4 space-y-3">
               <div>
@@ -348,7 +348,7 @@ export default function StudyProgress({
             </div>
             <div className="mt-5 flex justify-end gap-2">
               <button
-                onClick={() => setShowAddStudy(false)}
+                onClick={() => setShowEditProfile(false)}
                 className="rounded-lg border border-border bg-surface px-4 py-2 text-sm transition-colors hover:bg-surface-2"
               >
                 Cancel

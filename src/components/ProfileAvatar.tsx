@@ -91,11 +91,12 @@ export default function ProfileAvatar({
           />
           {/* Hover overlay */}
           <div
-            className={`absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 transition-opacity ${
+            className={`absolute inset-0 cursor-pointer rounded-full bg-black/50 flex items-center justify-center opacity-0 transition-opacity ${
               hover ? "opacity-100" : ""
             }`}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
+            onClick={() => fileInputRef.current?.click()}
           >
             <label
               htmlFor="avatar-upload"
@@ -149,7 +150,7 @@ export default function ProfileAvatar({
               alert("Failed to remove avatar.");
             }
           }}
-          className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-red text-white flex items-center justify-center text-xs shadow-md hover:red transition-colors"
+          className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-red text-white flex items-center justify-center text-xs shadow-md transition-opacity hover:opacity-90"
           title="Remove avatar"
         >
           <X size={10} />

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { X } from "lucide-react";
 
 function getYoutubeEmbedUrl(url: string) {
@@ -20,34 +21,46 @@ export default function VideoModal({
   title: string;
   onClose: () => void;
 }) {
+  useEffect(() => {
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
+    }
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
       role="presentation"
+      onClick={onClose}
     >
+      <div className="relative w-full max-w-4xl">
         <button
           type="button"
           onClick={onClose}
           aria-label="Close video"
-          className="absolute right-65 top-28 z-300 flex h-15 w-15 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80"
+          className="absolute -top-12 right-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80"
         >
           <X size={20} />
         </button>
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        className="relative w-full max-w-4xl overflow-hidden rounded-xl border border-border bg-surface shadow-2xl"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <div className="relative aspect-video w-full bg-black">
-          <iframe
-            src={getYoutubeEmbedUrl(url)}
-            title={title}
-            className="h-full w-full"
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            allowFullScreen
-          />
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={title}
+          className="overflow-hidden rounded-xl border border-border bg-surface shadow-2xl"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className="relative aspect-video w-full bg-black">
+            <iframe
+              src={getYoutubeEmbedUrl(url)}
+              title={title}
+              className="h-full w-full"
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowFullScreen
+            />
+          </div>
         </div>
       </div>
     </div>

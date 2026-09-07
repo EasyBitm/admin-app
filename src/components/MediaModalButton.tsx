@@ -44,6 +44,7 @@ export default function MediaModalButton({
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
           role="presentation"
+          onClick={() => setOpen(false)}
         >
           <div
             role="dialog"

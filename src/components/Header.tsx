@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Moon, Sun, LogIn, Award } from "lucide-react";
+import { Award, ChevronDown, LogIn, Menu, Moon, Sun, X } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 
 type SemesterLink = { slug: string; name: string };
@@ -55,7 +55,7 @@ function ThemeToggle() {
       onClick={toggle}
       aria-label="Toggle theme"
       suppressHydrationWarning
-      className="flex items-center gap-1 rounded-full border border-border bg-surface p-1"
+      className="flex items-center gap-1 rounded-full border border-border bg-surface p-1 transition-colors hover:border-accent"
     >
       <span
         suppressHydrationWarning
@@ -271,7 +271,13 @@ function UserProfile() {
   );
 }
 
+const mobileLinkClass =
+  "rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface-2 hover:text-foreground";
+
 export default function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <header className="sticky top-0 z-10 border-b border-border bg-background/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -320,7 +326,56 @@ export default function Header() {
             <UserProfile />
           </div>
         </nav>
+
+        {/* Mobile menu toggle */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface text-muted transition-colors hover:border-accent hover:text-foreground sm:hidden"
+        >
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </div>
+
+      {/* Mobile navigation panel */}
+      {menuOpen && (
+        <nav
+          aria-label="Mobile navigation"
+          className="border-t border-border bg-background px-6 py-4 sm:hidden"
+        >
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between px-3 py-1">
+              <span className="text-sm text-muted">Theme</span>
+              <ThemeToggle />
+            </div>
+            <Link
+              href="/#semesters"
+              onClick={closeMenu}
+              className={mobileLinkClass}
+            >
+              Semesters
+            </Link>
+            <Link href="/cmat" onClick={closeMenu} className={mobileLinkClass}>
+              CMAT
+            </Link>
+            <Link
+              href="/notices"
+              onClick={closeMenu}
+              className={mobileLinkClass}
+            >
+              Notices
+            </Link>
+            <a href="#" onClick={closeMenu} className={mobileLinkClass}>
+              Support Us
+            </a>
+            <div className="mt-2 border-t border-border pt-3">
+              <UserProfile />
+            </div>
+          </div>
+        </nav>
+      )}
     </header>
   );
 }
