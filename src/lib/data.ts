@@ -23,6 +23,7 @@ export type Subject = {
   chapters: number;
   difficulty: Difficulty;
   sort_order: number;
+  oneshot_video_url: string | null;
 };
 
 export type Lesson = {
@@ -45,6 +46,7 @@ export type Semester = {
   name: string;
   sort_order: number;
   is_visible: boolean;
+  overall_syllabus_url: string | null;
   subjects: Subject[];
 };
 
@@ -112,6 +114,7 @@ export async function updateSemester(
     name: string;
     sort_order: number;
     is_visible: boolean;
+    overall_syllabus_url: string | null;
   }>,
 ) {
   const { error } = await supabase
@@ -146,6 +149,7 @@ export async function updateSubject(
     chapters: number;
     difficulty: Difficulty;
     sort_order: number;
+    oneshot_video_url: string | null;
   }>,
 ) {
   const { error } = await supabase.from("subjects").update(input).eq("id", id);

@@ -4,7 +4,8 @@ import { BookOpen, Layers } from "lucide-react";
 import Header from "../../../src/components/Header";
 import Footer from "../../../src/components/Footer";
 import Breadcrumbs from "../../../src/components/Breadcrumbs";
-import { getSemester, getSemesters, type Difficulty } from "../../../src/lib/data";
+import MediaModalButton from "../../../src/components/MediaModalButton";
+import { getSemester, type Difficulty } from "../../../src/lib/data";
 
 export const dynamic = "force-dynamic";
 
@@ -20,10 +21,7 @@ export default async function SemesterPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [semester, semesters] = await Promise.all([
-    getSemester(slug),
-    getSemesters(),
-  ]);
+  const semester = await getSemester(slug);
 
   if (!semester) {
     notFound();
@@ -41,18 +39,33 @@ export default async function SemesterPage({
           ]}
         />
 
+        
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
+
         <h1 className="mt-6 text-3xl font-bold tracking-tight">
           {semester.name}
         </h1>
-        <div className="mt-2 flex items-center gap-1.5 text-sm text-muted">
-          <Layers size={14} />
-          {semester.subjects.length} subjects
-        </div>
+          {semester.overall_syllabus_url && (
+            <MediaModalButton
+              url={semester.overall_syllabus_url}
+              title={`${semester.name} overall syllabus`}
+              label="View overall syllabus"
+              kind="pdf"
+              className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm font-medium transition-colors hover:border-accent hover:bg-surface-2 hover:text-accent"
+            />
+          )}
+          
+      </div>
+          <div className="flex items-center gap-1.5 text-sm text-muted">
+            <Layers size={14} />
+            {semester.subjects.length} subjects
+          </div>
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {semester.subjects.map((subject) => (
-            <div
+            <Link
               key={subject.id}
-              className="flex flex-col justify-between rounded-xl border border-border bg-surface p-5"
+              href={`/semester/${slug}/${subject.id}`}
+              className="group flex flex-col justify-between rounded-xl border border-border bg-surface p-5 transition-colors hover:border-accent/50 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <div>
                 <div className="flex items-center gap-3">
@@ -74,19 +87,16 @@ export default async function SemesterPage({
               </div>
 
               <div className="mt-4 flex items-center justify-between">
-                <Link
-                  href={`/semester/${slug}/${subject.id}`}
-                  className="rounded-full border border-border px-4 py-1.5 text-sm font-medium transition-colors hover:bg-surface-2"
-                >
+                <span className="rounded-full border border-border px-4 py-1.5 text-sm font-medium transition-colors group-hover:border-accent group-hover:text-accent">
                   Learn
-                </Link>
+                </span>
                 <span
                   className={`rounded-full px-3 py-1 text-xs font-medium ${difficultyStyles[subject.difficulty]}`}
                 >
                   {subject.difficulty}
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

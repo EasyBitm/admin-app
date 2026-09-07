@@ -3,6 +3,7 @@ import Header from "../../../../src/components/Header";
 import Footer from "../../../../src/components/Footer";
 import Breadcrumbs from "../../../../src/components/Breadcrumbs";
 import SubjectTabs from "../../../../src/components/SubjectTabs";
+import MediaModalButton from "../../../../src/components/MediaModalButton";
 import {
   getSemester,
   getSubject,
@@ -58,9 +59,18 @@ export default async function SubjectPage({
         <p className="mt-6 text-xs font-medium uppercase tracking-wide text-muted">
           {subject.code}
         </p>
-        <h1 className="mt-1 text-2xl font-bold tracking-tight">
-          {subject.name}
-        </h1>
+        <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-2xl font-bold tracking-tight">{subject.name}</h1>
+          {subject.oneshot_video_url && (
+            <MediaModalButton
+              url={subject.oneshot_video_url}
+              title={`${subject.name} one-shot video`}
+              label="Watch one-shot video"
+              kind="video"
+              className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent/90"
+            />
+          )}
+        </div>
         <div className="mt-3 flex items-center gap-3">
           <span
             className={`rounded-full px-3 py-1 text-xs font-medium ${difficultyStyles[subject.difficulty]}`}

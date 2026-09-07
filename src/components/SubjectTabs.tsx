@@ -8,12 +8,10 @@ import {
   Video,
   ImageIcon,
   Play,
-  X,
-  Pause,
-  Volume2,
   type LucideIcon,
 } from "lucide-react";
 import type { Lesson, Resource, ResourceKind } from "../lib/data";
+import VideoModal from "./VideoModal";
 
 type TabKind = ResourceKind | "lessons";
 
@@ -42,15 +40,6 @@ function getYoutubeThumbnail(url: string) {
     /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/,
   );
   return match ? `https://i.ytimg.com/vi/${match[1]}/hqdefault.jpg` : null;
-}
-
-function getVideoEmbedUrl(url: string) {
-  const match = url.match(
-    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/,
-  );
-  return match
-    ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&controls=0&disablekb=1&fs=0&iv_load_policy=3&modestbranding=1&rel=0&enablejsapi=1&playsinline=1`
-    : url;
 }
 
 function groupByLesson(items: Resource[]) {
@@ -82,30 +71,11 @@ export default function SubjectTabs({
   const [hoveredLessonId, setHoveredLessonId] = useState<string | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<Resource | null>(null);
   const [selectedPdf, setSelectedPdf] = useState<Resource | null>(null);
-  const videoFrameRef = useRef<HTMLIFrameElement>(null);
-  const videoContainerRef = useRef<HTMLDivElement>(null);
-  const videoOverlayTimeoutRef = useRef<number | null>(null);
   const pdfModalRef = useRef<HTMLDivElement>(null);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
-  const [videoVolume, setVideoVolume] = useState(100);
-  const [showVideoShield, setShowVideoShield] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [isPdfFullscreen, setIsPdfFullscreen] = useState(false);
-
-  function showVideoShieldFor(duration: number) {
-    if (videoOverlayTimeoutRef.current) {
-      window.clearTimeout(videoOverlayTimeoutRef.current);
-    }
-    setShowVideoShield(true);
-    videoOverlayTimeoutRef.current = window.setTimeout(
-      () => setShowVideoShield(false),
-      duration,
-    );
-  }
 
   useEffect(() => {
     function handleFullscreenChange() {
-      setIsFullscreen(document.fullscreenElement === videoContainerRef.current);
       setIsPdfFullscreen(document.fullscreenElement === pdfModalRef.current);
     }
 
@@ -126,33 +96,22 @@ export default function SubjectTabs({
   }, [selectedPdf]);
 
   useEffect(() => {
-    if (!selectedVideo && !selectedPdf) return;
+    if (!selectedPdf) return;
 
     function handleFullscreenShortcut(event: KeyboardEvent) {
       if (event.key.toLowerCase() !== "f") return;
 
       event.preventDefault();
-      const fullscreenTarget = selectedVideo
-        ? videoContainerRef.current
-        : pdfModalRef.current;
-
       if (document.fullscreenElement) {
         document.exitFullscreen();
       } else {
-        fullscreenTarget?.requestFullscreen();
+        pdfModalRef.current?.requestFullscreen();
       }
     }
 
     window.addEventListener("keydown", handleFullscreenShortcut);
     return () => window.removeEventListener("keydown", handleFullscreenShortcut);
-  }, [selectedVideo, selectedPdf]);
-
-  function sendVideoCommand(func: string, args: unknown[] = []) {
-    videoFrameRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ event: "command", func, args }),
-      "*",
-    );
-  }
+  }, [selectedPdf]);
 
   const items = groups.find((g) => g.kind === active)?.items ?? [];
   const videoItems = groups.find((g) => g.kind === "video")?.items ?? [];
@@ -200,9 +159,7 @@ export default function SubjectTabs({
             {lessons.map((lesson, i) => (
               <li
                 key={lesson.id}
-                onMouseEnter={() => setHoveredLessonId(lesson.id)}
-                onMouseLeave={() => setHoveredLessonId(null)}
-                className="rounded-xl border border-border bg-surface text-sm"
+                className="rounded-xl border border-border bg-surface text-sm transition-colors hover:border-accent/50 hover:bg-surface-2"
               >
                 <button
                   type="button"
@@ -248,9 +205,6 @@ export default function SubjectTabs({
                                 onClick={(event) => {
                                   event.preventDefault();
                                   setSelectedVideo(item);
-                                  setIsVideoPlaying(true);
-                                  setVideoVolume(100);
-                                  showVideoShieldFor(8000);
                                 }}
                                 className="group overflow-hidden rounded-xl border border-border bg-surface-2"
                               >
