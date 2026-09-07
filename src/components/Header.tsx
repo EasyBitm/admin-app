@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Moon, Sun } from "lucide-react";
+import { ChevronDown, Moon, Sun, LogIn, Award } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 
 type SemesterLink = { slug: string; name: string };
@@ -100,7 +100,7 @@ function SemestersMenu() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1 text-sm font-medium text-muted hover:text-foreground"
+        className="no-red-hover flex items-center gap-1 text-sm font-medium text-muted hover:text-foreground"
       >
         Semesters
         <ChevronDown
@@ -120,6 +120,151 @@ function SemestersMenu() {
               {s.name}
             </Link>
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface UserInfo {
+  id: string;
+  email: string;
+  profile?: {
+    full_name: string | null;
+    avatar_url: string | null;
+  } | null;
+}
+
+function UserProfile() {
+  const [user, setUser] = useState<UserInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    async function loadUser() {
+      try {
+        const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+        if (supabaseUser) {
+          const { getUserProfile } = await import("../lib/profiles");
+          const profile = await getUserProfile(supabaseUser.id);
+          setUser({
+            id: supabaseUser.id,
+            email: supabaseUser.email!,
+            profile,
+          });
+        }
+      } catch (err) {
+        console.error("Failed to load user:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadUser();
+  }, []);
+
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center gap-2">
+        <div className="h-6 w-6 animate-pulse rounded-full bg-surface-2" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Link
+        href="/profile"
+        className="flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-3 py-1.5 text-sm font-medium text-muted hover:border-accent hover:text-foreground transition-colors no-red-hover"
+      >
+        <LogIn size={14} />
+        Sign In
+      </Link>
+    );
+  }
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-3 py-1.5 text-sm text-muted hover:border-accent hover:text-foreground transition-colors"
+      >
+        {user.profile?.avatar_url ? (
+          <img
+            src={user.profile.avatar_url}
+            alt="Avatar"
+            className="h-6 w-6 rounded-full object-cover ring-1 ring-border"
+          />
+        ) : (
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-medium">
+            {user.profile?.full_name?.[0] || user.email[0].toUpperCase()}
+          </div>
+        )}
+        <span className="hidden sm:block truncate max-w-[120px]">
+          {user.profile?.full_name || user.email.split("@")[0]}
+        </span>
+        <ChevronDown
+          size={14}
+          className={`transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full z-20 mt-2 w-64 rounded-xl border border-border bg-surface-2 p-2 shadow-xl">
+          <div className="flex items-center gap-3 rounded-lg bg-surface p-3 pb-2">
+            {user.profile?.avatar_url ? (
+              <img
+                src={user.profile.avatar_url}
+                alt="Avatar"
+                className="h-10 w-10 rounded-full object-cover ring-2 ring-border"
+              />
+            ) : (
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent text-lg font-medium">
+                {user.profile?.full_name?.[0] || user.email[0].toUpperCase()}
+              </div>
+            )}
+            <div>
+              <div className="text-sm font-medium">
+                {user.profile?.full_name || "User"}
+              </div>
+              <div className="text-xs text-muted">{user.email}</div>
+            </div>
+          </div>
+
+          <div className="my-2 border-t border-border" />
+
+          <Link
+            href="/profile"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted hover:bg-surface hover:text-foreground"
+          >
+            <Award size={14} />
+            My Progress
+          </Link>
+
+          <form
+            action="/api/auth/logout"
+            method="POST"
+            onClick={() => setOpen(false)}
+          >
+            <button
+              type="submit"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted hover:bg-surface hover:text-red transition-colors"
+            >
+              <LogIn size={14} />
+              Sign Out
+            </button>
+          </form>
         </div>
       )}
     </div>
@@ -153,28 +298,27 @@ export default function Header() {
           <SemestersMenu />
           <Link
             href="/cmat"
-            className="text-sm font-medium text-muted hover:text-foreground"
+            className="text-sm font-medium text-muted hover:text-foreground no-red-hover"
           >
             CMAT
           </Link>
           <Link
             href="/notices"
-            className="text-sm font-medium text-muted hover:text-foreground"
+            className="text-sm font-medium text-muted hover:text-foreground no-red-hover"
           >
             Notices
           </Link>
           <a
             href="#"
-            className="text-sm font-medium text-muted hover:text-foreground"
+            className="text-sm font-medium text-muted hover:text-foreground no-red-hover"
           >
             Support Us
           </a>
-          {/* <a
-            href="#contact"
-            className="text-sm font-medium text-muted hover:text-foreground"
-          >
-            Contact
-          </a> */}
+
+          {/* User auth section */}
+          <div className="ml-4 flex items-center gap-2">
+            <UserProfile />
+          </div>
         </nav>
       </div>
     </header>

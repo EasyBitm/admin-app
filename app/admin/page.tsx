@@ -54,7 +54,7 @@ export default function AdminPage() {
             <div className="flex items-center gap-3">
               <Link
                 href={`/admin/${s.slug}`}
-                className="rounded-full border border-border px-4 py-1.5 text-sm font-medium transition-colors hover:bg-surface-2"
+                className="rounded-full border border-border px-4 py-1.5 text-sm font-medium transition-colors hover-red"
               >
                 Manage
               </Link>
@@ -62,7 +62,7 @@ export default function AdminPage() {
                 onClick={() => handleToggleVisible(s)}
                 aria-label={s.is_visible ? "Hide semester" : "Show semester"}
                 title={s.is_visible ? "Hide from site" : "Show on site"}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+                className="no-red-hover flex h-8 w-8 items-center justify-center rounded-full text-muted transition-colors hover-red"
               >
                 {s.is_visible ? <Eye size={16} /> : <EyeOff size={16} />}
               </button>

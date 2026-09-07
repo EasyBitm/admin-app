@@ -140,11 +140,10 @@ export default function AdminSemesterPage({
               {d}
             </option>
           ))}
-        </select>
-        <button
+        </select>          <button
           type="submit"
           disabled={saving}
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent/90 disabled:opacity-50 sm:col-span-5"
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-red disabled:opacity-50 sm:col-span-5"
         >
           Add Subject
         </button>
@@ -210,14 +209,14 @@ export default function AdminSemesterPage({
             <div className="flex items-center gap-2 self-end sm:self-center">
               <Link
                 href={`/admin/${slug}/${subject.id}`}
-                className="rounded-full border border-border px-4 py-1.5 text-sm font-medium transition-colors hover:bg-surface-2"
+                className="rounded-full border border-border px-4 py-1.5 text-sm font-medium transition-colors hover-red"
               >
                 Resources
               </Link>
               <button
                 onClick={() => handleDeleteSubject(subject.id)}
                 aria-label="Delete subject"
-                className="flex h-8 w-8 items-center justify-center rounded-full text-muted transition-colors hover:bg-red-500/10 hover:text-red-500"
+                className="no-red-hover flex h-8 w-8 items-center justify-center rounded-full text-muted transition-colors hover:bg-red-500/10 hover:text-red-500"
               >
                 <Trash2 size={16} />
               </button>

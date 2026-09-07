@@ -38,3 +38,33 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Button base transitions */
+button,
+button[type="button"],
+button[type="submit"],
+.btn {
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+button:active,
+button[type="button"]:active,
+button[type="submit"]:active,
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Red hover effect — apply .hover-red to any button/link */
+button:hover,
+button[type="button"]:hover,
+button[type="submit"]:hover,
+button.hover-red:hover,
+button[type="button"].hover-red:hover,
+button[type="submit"].hover-red:hover,
+.btn.hover-red:hover,
+a.hover-red:hover {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+  transform: translateY(-1px);
+}

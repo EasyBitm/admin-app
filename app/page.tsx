@@ -24,22 +24,44 @@ export default async function Home() {
     <div className="flex flex-col flex-1">
       <Header />
 
-      <section className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 px-6 py-20 my-10 lg:grid-cols-2">
-        <div className="flex flex-col gap-6">
-          <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-            Your <span className="text-accent">simple</span> guide to
-            master every semester exam.
-          </h1>
-          <p className="max-w-md text-muted">
-            Notes, guides, and organized resources so you can
-            focus on learning instead of hunting for materials.
-          </p>
+      <section className="relative mx-auto w-full max-w-6xl px-6 py-28 lg:py-36">
+        {/* Decorative orbs */}
+        <div aria-hidden="true" className="absolute right-[-10%] top-[-20%] h-72 w-72 rounded-full bg-accent-2/20 blur-3xl" />
+        <div aria-hidden="true" className="absolute left-[-8%] bottom-[-10%] h-56 w-56 rounded-full bg-accent/10 blur-3xl" />
+        <div
+          aria-hidden="true"
+          className="absolute left-1/2 top-20 h-2 w-2 rounded-full bg-accent animate-pulse"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute right-10 top-40 h-1.5 w-1.5 rounded-full bg-accent-2 animate-pulse"
+        />
+
+        <div className="relative flex flex-col items-center justify-center gap-12 lg:items-start lg:gap-16">
+          <div className="max-w-xl lg:max-w-none">
+            <div className="inline-block rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium text-accent before:content-[''] before:absolute before:-left-1 before:top-1/2 before:h-4 before:w-4 before:rotate-45 before:bg-accent/10 before:-translate-y-1/2">
+              Tribhuvan University · BITM
+            </div>
+
+            <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+              <span className="inline-block transition-all duration-700 ease-out hover:translate-x-1 hover:underline underline-offset-4 decoration-accent/40">
+                Your <span className="text-accent">simple</span> guide
+              </span>
+              <br />
+              to ace every semester.
+            </h1>
+
+            <p className="mt-5 max-w-lg text-muted leading-relaxed">
+              Notes, guides, and organized resources — so you can focus on
+              learning instead of hunting for materials.
+            </p>
+          </div>
 
           <div className="flex flex-wrap gap-3">
             {stats.map((s) => (
               <div
                 key={s.label}
-                className="rounded-xl border border-border bg-surface px-4 py-3"
+                className="rounded-xl border border-border bg-surface px-4 py-3 transition-transform duration-300 hover:-translate-y-1"
               >
                 <div className="text-xl font-semibold">{s.value}</div>
                 <div className="text-xs text-muted">{s.label}</div>
@@ -50,33 +72,36 @@ export default async function Home() {
           <div className="flex flex-wrap gap-4 pt-2">
             <a
               href="#semesters"
-              className="rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-accent/90"
+              className="group relative overflow-hidden rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-colors duration-200 hover-red"
             >
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
               Start Learning
             </a>
             <a
               href="#contact"
-              className="rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors hover:bg-surface"
+              className="rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors duration-200 hover:bg-surface hover:border-accent"
             >
               Contribute
             </a>
           </div>
         </div>
 
-        <div className="mx-auto flex w-full max-w-md flex-col items-center gap-6 text-center">
-          {/* <Image
-            src="/TU-LOGO.png"
-            alt="Tribhuvan University Logo"
-            width={220}
-            height={220}
-            className="h-40 w-40 object-contain sm:h-56 sm:w-56"
-            priority
-          /> */}
-          <p className="text-sm font-semibold leading-snug md:text-lg">
-            “All power is within you; <br /> you can do anything and everything.”
-            <br />
-            <span className="text-muted">— Swami Vivekananda</span>
-          </p>
+        {/* Quote card */}
+        <div className="absolute right-0 top-1/2 h-96 w-72 -translate-y-1/2 lg:right-0 lg:w-80">
+          <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl border border-border bg-surface p-8 shadow-lg transition-shadow duration-300 hover:shadow-xl">
+            <div className="h-10 w-10 items-center justify-center rounded-full bg-accent/15 text-accent">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 12a8 8 0 1 1 16 0a8 8 0 0 1-16 0" />
+                <path d="M12 8v4M12 16h.01" />
+              </svg>
+            </div>
+            <blockquote className="mt-5 text-center text-base font-semibold leading-relaxed">
+              “All power is within you; you can do anything and everything.”
+              <footer className="mt-3 text-sm text-muted">
+                — Swami Vivekananda
+              </footer>
+            </blockquote>
+          </div>
         </div>
       </section>
 
@@ -161,7 +186,7 @@ export default async function Home() {
           </p>
           <a
             href="mailto:easybitm@gmail.com"
-            className="mt-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-accent/90"
+            className="mt-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-colors hover-red"
           >
             Send Feedback
           </a>

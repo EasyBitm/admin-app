@@ -211,7 +211,7 @@ export default function SubjectTabs({
                       expandedLessonId === lesson.id ? null : lesson.id,
                     )
                   }
-                  className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
+                  className="no-red-hover flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
                   aria-expanded={expandedLessonId === lesson.id}
                 >
                   <span>
@@ -428,7 +428,7 @@ export default function SubjectTabs({
               type="button"
               onClick={() => setSelectedVideo(null)}
               aria-label="Close video"
-              className="absolute right-3 top-3 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80"
+              className="no-red-hover absolute right-3 top-3 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80"
             >
               <X size={20} />
             </button>
@@ -517,7 +517,7 @@ export default function SubjectTabs({
               <button
                 type="button"
                 onClick={() => setSelectedVideo(null)}
-                className="shrink-0 rounded-full border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-2"
+                className="no-red-hover shrink-0 rounded-full border border-border px-4 py-2 text-sm font-medium transition-colors hover-red"
               >
                 Close video
               </button>
@@ -564,14 +564,14 @@ export default function SubjectTabs({
                     }
                   }}
                   aria-label={isPdfFullscreen ? "Exit PDF fullscreen" : "Fullscreen PDF"}
-                  className="rounded-full border border-border px-3 py-2 text-xs font-medium transition-colors hover:bg-surface-2"
+                  className="no-red-hover rounded-full border border-border px-3 py-2 text-xs font-medium transition-colors hover-red"
                 >
                   {isPdfFullscreen ? "Exit full screen" : "Full screen"}
                 </button>
                 <button
                   type="button"
                   onClick={() => setSelectedPdf(null)}
-                  className="rounded-full border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-2"
+                  className="rounded-full border border-border px-4 py-2 text-sm font-medium transition-colors hover-red"
                 >
                   Close PDF
                 </button>
