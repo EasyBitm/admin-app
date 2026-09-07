@@ -62,7 +62,7 @@ export default function AdminPage() {
                 onClick={() => handleToggleVisible(s)}
                 aria-label={s.is_visible ? "Hide semester" : "Show semester"}
                 title={s.is_visible ? "Hide from site" : "Show on site"}
-                className="no-red-hover flex h-8 w-8 items-center justify-center rounded-full text-muted transition-colors hover-red"
+                className="no-red-hover flex h-8 w-8 items-center justify-center rounded-full text-muted transition-colors hover:bg-red-500/10 hover:text-red-500"
               >
                 {s.is_visible ? <Eye size={16} /> : <EyeOff size={16} />}
               </button>

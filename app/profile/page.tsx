@@ -158,8 +158,10 @@ export default function ProfilePage() {
             <ArrowLeft size={18} />
             <span className="text-sm font-medium">Back</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-muted">{session.email}</span>
+          <div className="flex min-w-0 items-center gap-4">
+            <span className="max-w-[140px] truncate text-sm text-muted sm:max-w-none">
+              {session.email}
+            </span>
             <button
               onClick={handleLogout}
               className="flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-3 py-1.5 text-sm transition-colors hover:border-red hover:text-red"
@@ -209,7 +211,7 @@ export default function ProfilePage() {
         </p>
 
         {/* Mode Toggle */}
-        <div className="mt-8 flex items-center gap-2">
+        <div className="mt-8 flex w-full max-w-sm items-center gap-2">
           <button
             onClick={() => setMode("login")}
             className={`flex-1 rounded-lg py-2 text-sm font-medium transition-colors ${

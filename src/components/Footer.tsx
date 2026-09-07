@@ -5,9 +5,6 @@ import {
   FaFacebookF,
   FaGithub,
   FaInstagram,
-  FaLinkedinIn,
-  FaXTwitter,
-  FaYoutube,
 } from "react-icons/fa6";
 
 const footerLinks = {
@@ -27,9 +24,6 @@ const footerLinks = {
 const socialLinks = [
   { label: "Instagram", href: "https://www.instagram.com/easybitm/", Icon: FaInstagram },
   { label: "Facebook", href: "https://www.facebook.com/easybitm/", Icon: FaFacebookF },
-  { label: "YouTube", href: "https://www.youtube.com/@easybitm", Icon: FaYoutube },
-  { label: "X (formerly Twitter)", href: "https://x.com/easybitm", Icon: FaXTwitter },
-  { label: "LinkedIn", href: "https://www.linkedin.com/company/easybitm/", Icon: FaLinkedinIn },
   { label: "GitHub", href: "https://github.com/easybitm", Icon: FaGithub },
 ];
 
