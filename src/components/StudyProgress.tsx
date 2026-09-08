@@ -167,7 +167,7 @@ export default function StudyProgress({
         title: newStudyTitle,
         description: newStudyDesc || undefined,
         subject_type: newStudyType || undefined,
-        color: studies.length % 2 === 0 ? "#22c55e" : "#a855f7",
+        color: studies.length % 2 === 0 ? "#22c55e" : "#3b82f6",
       });
 
       setStudies((prev) => [study, ...prev]);
@@ -364,7 +364,7 @@ export default function StudyProgress({
               </button>
               <button
                 onClick={updateProfile}
-                className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-red"
+                className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-primary"
               >
                 Save
               </button>
@@ -446,7 +446,7 @@ export default function StudyProgress({
         ) : (
           <button
             onClick={() => setShowAddStudy(true)}
-            className="flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-red"
+            className="flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-primary"
           >
             <Plus size={16} />
             New Study
@@ -484,7 +484,7 @@ export default function StudyProgress({
               />
               <button
                 onClick={createStudy}
-                className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-red"
+                className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-primary"
               >
                 Create
               </button>
@@ -818,7 +818,7 @@ function StudyCard({
                 </button>
                 <button
                   onClick={onCreateTopic}
-                  className="rounded bg-accent px-3 py-1 text-xs font-medium text-white transition-colors hover-red"
+                  className="rounded bg-accent px-3 py-1 text-xs font-medium text-white transition-colors hover-primary"
                 >
                   Add Topic
                 </button>

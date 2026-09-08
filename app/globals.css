@@ -1,23 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0f;
-  --foreground: #f5f5f7;
+  --background: #09090b;
+  --foreground: #f4f4f5;
   --accent: #22c55e;
-  --accent-2: #a855f7;
-  --surface: #16161d;
-  --surface-2: #1f1f28;
-  --border: #2a2a35;
+  --accent-2: #3b82f6;
+  --surface: #111113;
+  --surface-2: #1a1a1f;
+  --border: #2b2b32;
   --muted: #a1a1aa;
 }
 
 :root[data-theme="light"] {
-  --background: #fdfcfa;
-  --foreground: #1c1a17;
-  --surface: #f6f4f0;
-  --surface-2: #ece9e2;
-  --border: #e2ded4;
-  --muted: #57534a;
+  --background: #fafafa;
+  --foreground: #18181b;
+  --surface: #ffffff;
+  --surface-2: #f4f4f5;
+  --border: #e4e4e7;
+  --muted: #71717a;
 }
 
 @theme inline {
@@ -79,10 +79,10 @@ button[type="submit"]:active,
 /* Red hover effect — opt in per element with .hover-red (button, link, or label).
    Scoped to hover-capable pointers so touch devices never get sticky hover states. */
 @media (hover: hover) {
-  .hover-red:hover {
-    background-color: #ef4444 !important;
+  .hover-primary:hover {
+    background-color: #15803d !important;
     color: #ffffff !important;
-    border-color: #ef4444 !important;
+    border-color: #15803d !important;
     transform: translateY(-1px);
   }
 }

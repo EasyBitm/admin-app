@@ -207,7 +207,7 @@ export default function AdminSemesterPage({
         </select>          <button
           type="submit"
           disabled={saving}
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-red disabled:opacity-50 sm:col-span-5"
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-primary disabled:opacity-50 sm:col-span-5"
         >
           Add Subject
         </button>
@@ -273,7 +273,7 @@ export default function AdminSemesterPage({
             <div className="flex items-center gap-2 self-end sm:self-center">
               <Link
                 href={`/admin/${slug}/${subject.id}`}
-                className="rounded-full border border-border px-4 py-1.5 text-sm font-medium transition-colors hover-red"
+                className="rounded-full border border-border px-4 py-1.5 text-sm font-medium transition-colors hover-primary"
               >
                 Resources
               </Link>

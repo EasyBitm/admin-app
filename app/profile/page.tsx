@@ -306,7 +306,7 @@ export default function ProfilePage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 w-full rounded-lg bg-accent py-2.5 text-sm font-medium text-white transition-colors hover-red disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-2 w-full rounded-lg bg-accent py-2.5 text-sm font-medium text-white transition-colors hover-primary disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -407,7 +407,7 @@ export default function ProfilePage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 w-full rounded-lg bg-accent py-2.5 text-sm font-medium text-white transition-colors hover-red disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-2 w-full rounded-lg bg-accent py-2.5 text-sm font-medium text-white transition-colors hover-primary disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

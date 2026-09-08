@@ -220,7 +220,7 @@ export default function AdminSubjectPage({
         <button
           type="submit"
           disabled={saving}
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-red disabled:opacity-50 sm:col-span-1"
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-primary disabled:opacity-50 sm:col-span-1"
         >
           Add Unit
         </button>
@@ -352,7 +352,7 @@ export default function AdminSubjectPage({
         <button
           type="submit"
           disabled={saving || uploading}
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-red disabled:opacity-50 sm:col-span-6"
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover-primary disabled:opacity-50 sm:col-span-6"
         >
           Add Resource
         </button>

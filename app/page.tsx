@@ -31,9 +31,9 @@ export default async function Home() {
     <div className="flex flex-col flex-1">
       <Header />
 
-      <section className="relative mx-auto w-full max-w-6xl overflow-hidden px-6 py-20 sm:py-28 lg:py-36">
+      <section className="relative mx-auto my-5 w-[calc(100%-2rem)] max-w-6xl overflow-hidden rounded-3xl border border-border bg-surface/70 px-6 py-20 shadow-2xl shadow-black/20 sm:my-8 sm:w-[calc(100%-3rem)] sm:py-28 lg:py-36">
         {/* Decorative orbs */}
-        <div aria-hidden="true" className="absolute right-[-10%] top-[-20%] h-72 w-72 rounded-full bg-accent-2/20 blur-3xl" />
+        <div aria-hidden="true" className="absolute right-[-10%] top-[-20%] h-72 w-72 rounded-full bg-accent-2/25 blur-3xl" />
         <div aria-hidden="true" className="absolute left-[-8%] bottom-[-10%] h-56 w-56 rounded-full bg-accent/10 blur-3xl" />
         <div
           aria-hidden="true"
@@ -47,7 +47,7 @@ export default async function Home() {
         <div className="relative flex flex-col items-center justify-center gap-12 lg:items-start lg:gap-16">
           <div className="max-w-xl lg:max-w-none">
             <h1 className="hero-title mt-0 text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
-              <span className="inline-block transition-all duration-700 ease-out hover:translate-x-1 hover:underline underline-offset-4 decoration-accent/40">
+              <span className="inline-block">
                 Your <span className="text-accent">simple</span> guide
               </span>
               <br />
@@ -64,7 +64,7 @@ export default async function Home() {
             {stats.map((s) => (
               <div
                 key={s.label}
-                className="rounded-xl border border-border bg-surface px-4 py-3 transition-transform duration-300 hover:-translate-y-1"
+                className="rounded-xl border border-border bg-surface/90 px-4 py-3 transition-all duration-300 hover:-translate-y-1 hover:border-accent-2/60 hover:shadow-lg hover:shadow-accent-2/10"
               >
                 <div className="text-xl font-semibold">{s.value}</div>
                 <div className="text-xs text-muted">{s.label}</div>
@@ -75,14 +75,14 @@ export default async function Home() {
           <div className="flex flex-wrap gap-4 pt-2">
             <a
               href="#semesters"
-              className="group relative overflow-hidden rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-colors duration-200 hover-red"
+              className="group relative overflow-hidden rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-colors duration-200 hover-primary"
             >
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
               Start Learning
             </a>
             <a
               href="#contact"
-              className="rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors duration-200 hover:bg-surface hover:border-accent"
+              className="rounded-full border border-accent-2/60 bg-accent-2/10 px-6 py-3 text-sm font-medium text-accent-2 transition-colors duration-200 hover:bg-accent-2 hover:text-white"
             >
               Contribute
             </a>
@@ -91,8 +91,8 @@ export default async function Home() {
 
         {/* Quote card — stacked below hero on mobile, floating at right on desktop */}
         <div className="relative mt-2 flex w-full justify-center lg:absolute lg:right-0 lg:top-1/2 lg:mt-0 lg:h-96 lg:w-80 lg:-translate-y-1/2">
-          <div className="flex h-full w-full max-w-xs flex-col items-center justify-center rounded-2xl border border-border bg-surface p-8 shadow-lg transition-shadow duration-300 hover:shadow-xl lg:max-w-none">
-            <div className="h-10 w-10 items-center justify-center rounded-full bg-accent/15 text-accent">
+          <div className="flex h-full w-full max-w-xs flex-col items-center justify-center rounded-2xl border border-accent-2/30 bg-surface/90 p-8 shadow-lg shadow-accent-2/10 transition-shadow duration-300 hover:shadow-xl lg:max-w-none">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-2/15 text-accent-2">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 12a8 8 0 1 1 16 0a8 8 0 0 1-16 0" />
                 <path d="M12 8v4M12 16h.01" />
@@ -116,7 +116,7 @@ export default async function Home() {
               <Link
                 key={s.slug}
                 href={`/semester/${s.slug}`}
-                className="flex min-h-32 items-center justify-between rounded-xl border border-border bg-surface px-6 py-6 transition-colors hover:bg-surface-2"
+                className="group flex min-h-32 items-center justify-between rounded-xl border border-border bg-surface px-6 py-6 transition-all hover:-translate-y-0.5 hover:border-accent-2/70 hover:bg-surface-2 hover:shadow-lg hover:shadow-accent-2/10"
               >
                 <div>
                   <div className="text-lg font-medium">{s.name}</div>
@@ -124,7 +124,7 @@ export default async function Home() {
                     {s.subjects.length} subjects
                   </div>
                 </div>
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 text-muted">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-2/10 text-accent-2 transition-transform group-hover:translate-x-1">
                   &rsaquo;
                 </span>
               </Link>
@@ -156,21 +156,15 @@ export default async function Home() {
             Everything organized in one place, updated, and
             free to use.
           </p>
-          <div className="mt-10 grid grid-cols-1 gap-6 text-left sm:grid-cols-3">
-            <div className="rounded-xl border border-border bg-surface p-5">
-              <div className="font-medium">Organized</div>
+          <div className="mt-10 grid grid-cols-1 gap-6 text-left sm:grid-cols-2">
+            <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-accent/60">
+              <div className="font-medium text-accent">Organized</div>
               <p className="mt-2 text-sm text-muted">
                 Find exactly what you need without digging through folders.
               </p>
             </div>
-            <div className="rounded-xl border border-border bg-surface p-5">
-              <div className="font-medium">Community Driven</div>
-              <p className="mt-2 text-sm text-muted">
-                Content improves over time with contributions from students.
-              </p>
-            </div>
-            <div className="rounded-xl border border-border bg-surface p-5">
-              <div className="font-medium">Always Free</div>
+            <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-accent/60">
+              <div className="font-medium text-accent">Always Free</div>
               <p className="mt-2 text-sm text-muted">
                 No paywalls, no subscriptions — just resources when you need
                 them.
@@ -189,7 +183,7 @@ export default async function Home() {
           </p>
           <a
             href="mailto:easybitm@gmail.com"
-            className="mt-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-colors hover-red"
+            className="mt-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-colors hover-primary"
           >
             Send Feedback
           </a>

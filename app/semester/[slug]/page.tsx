@@ -39,7 +39,7 @@ export async function generateMetadata({
 
 const difficultyStyles: Record<Difficulty, string> = {
   Easy: "bg-accent/15 text-accent",
-  Medium: "bg-amber-500/15 text-amber-500",
+  Medium: "bg-accent-2/15 text-accent-2",
   Hard: "bg-red-500/15 text-red-500",
 };
 

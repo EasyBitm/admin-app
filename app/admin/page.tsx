@@ -54,7 +54,7 @@ export default function AdminPage() {
             <div className="flex items-center gap-3">
               <Link
                 href={`/admin/${s.slug}`}
-                className="rounded-full border border-border px-4 py-1.5 text-sm font-medium transition-colors hover-red"
+                className="rounded-full border border-border px-4 py-1.5 text-sm font-medium transition-colors hover-primary"
               >
                 Manage
               </Link>

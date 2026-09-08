@@ -90,7 +90,7 @@ export default function ProfileAvatar({
           >
             <label
               htmlFor="avatar-upload"
-              className="cursor-pointer flex items-center gap-1.5 text-white text-sm font-medium hover-red"
+              className="cursor-pointer flex items-center gap-1.5 text-white text-sm font-medium hover-primary"
             >
               <Camera size={16} />
               Change
