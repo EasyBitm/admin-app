@@ -21,11 +21,6 @@ export const metadata: Metadata = {
 export default async function Home() {
   const semesters = await getSemesters({ includeHidden: true });
   const visibleSemesters = semesters.filter((s) => s.is_visible);
-  const totalSubjects = visibleSemesters.reduce(
-    (sum, s) => sum + s.subjects.length,
-    0,
-  );
-
   const stats = [
     { label: "Semesters Covered", value: `${visibleSemesters.length || 8}` },
     // { label: "Subjects Listed", value: `${totalSubjects}+` },

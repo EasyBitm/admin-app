@@ -1,4 +1,4 @@
-import { supabase, supabaseAuth } from "./supabaseClient";
+import { supabase } from "./supabaseClient";
 
 // ============================================
 // PROFILE FUNCTIONS
@@ -74,10 +74,7 @@ export async function uploadAvatar(
   return urlData.publicUrl;
 }
 
-export async function deleteAvatar(
-  avatarUrl: string,
-  userId: string
-): Promise<void> {
+export async function deleteAvatar(avatarUrl: string): Promise<void> {
   // Extract path from URL
   const urlParts = avatarUrl.split("/");
   const fileName = urlParts[urlParts.length - 1];

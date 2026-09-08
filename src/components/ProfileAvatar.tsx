@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { Camera, X, Upload, ImageOff } from "lucide-react";
+import { Camera, X } from "lucide-react";
 
 interface ProfileAvatarProps {
   avatarUrl: string | null;
@@ -52,16 +52,6 @@ export default function ProfileAvatar({
       setUploading(true);
 
       try {
-        const formData = new FormData();
-        formData.append("file", file);
-
-        const res = await fetch("/api/upload-avatar", {
-          method: "POST",
-          body: JSON.stringify({ file: file.name, userId }),
-          headers: { "Content-Type": "application/json" },
-        });
-
-        // Use the direct storage approach via client
         const { uploadAvatar } = await import("../lib/profiles");
         const url = await uploadAvatar(file, userId);
 
@@ -143,7 +133,7 @@ export default function ProfileAvatar({
             if (!confirm("Remove your profile picture?")) return;
             try {
               const { deleteAvatar } = await import("../lib/profiles");
-              await deleteAvatar(avatarUrl, userId);
+              await deleteAvatar(avatarUrl);
               onAvatarChange?.(null);
             } catch (err) {
               console.error("Delete failed:", err);

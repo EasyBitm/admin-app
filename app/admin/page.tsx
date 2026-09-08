@@ -17,7 +17,7 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
-    load();
+    queueMicrotask(() => void load());
   }, []);
 
   async function handleToggleVisible(s: Semester) {

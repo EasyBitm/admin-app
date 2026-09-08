@@ -107,7 +107,6 @@ export default function StudyProgress({
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showAddTopic, setShowAddTopic] = useState<string | null>(null);
   const [expandedStudies, setExpandedStudies] = useState<Set<string>>(new Set());
-  const [profileDirty, setProfileDirty] = useState(false);
 
   // Add study form state
   const [newStudyTitle, setNewStudyTitle] = useState("");
@@ -129,13 +128,20 @@ export default function StudyProgress({
         "../lib/profiles"
       );
 
-      const [studiesData, entriesData, milestonesData] = await Promise.all([
+      const [studiesData, milestonesData] = await Promise.all([
         getStudies(userId),
-        Promise.resolve({}), // placeholder, will be loaded per study
         getMilestones(userId),
       ]);
 
+      const entriesByStudy = await Promise.all(
+        studiesData.map(async (study) => [
+          study.id,
+          await getProgressEntries(userId, study.id),
+        ] as const),
+      );
+
       setStudies(studiesData);
+      setProgressEntries(Object.fromEntries(entriesByStudy));
       setMilestones(milestonesData);
       setActiveStudy(studiesData[0]?.id || null);
     } catch (err) {
@@ -150,17 +156,6 @@ export default function StudyProgress({
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Load progress entries for a study
-  const loadProgressEntries = async (studyId: string) => {
-    try {
-      const { getProgressEntries } = await import("../lib/profiles");
-      const entries = await getProgressEntries(userId, studyId);
-      setProgressEntries((prev) => ({ ...prev, [studyId]: entries }));
-    } catch (err) {
-      console.error("Failed to load entries:", err);
-    }
-  };
 
   // Create a new study
   const createStudy = async () => {
@@ -181,7 +176,6 @@ export default function StudyProgress({
       setNewStudyDesc("");
       setNewStudyType("");
       setShowAddStudy(false);
-      setProfileDirty(true);
     } catch (err) {
       console.error("Failed to create study:", err);
       alert("Failed to create study.");
@@ -210,7 +204,6 @@ export default function StudyProgress({
       const { getStudies } = await import("../lib/profiles");
       const studiesData = await getStudies(userId);
       setStudies(studiesData);
-      setProfileDirty(true);
 
       setNewTopicName("");
       setNewTopicNotes("");
@@ -236,7 +229,6 @@ export default function StudyProgress({
       const { getStudies } = await import("../lib/profiles");
       const studiesData = await getStudies(userId);
       setStudies(studiesData);
-      setProfileDirty(true);
     } catch (err) {
       console.error("Failed to update topic:", err);
     }
@@ -259,9 +251,27 @@ export default function StudyProgress({
       const { getStudies } = await import("../lib/profiles");
       const studiesData = await getStudies(userId);
       setStudies(studiesData);
-      setProfileDirty(true);
     } catch (err) {
       console.error("Failed to delete topic:", err);
+    }
+  };
+
+  const deleteStudy = async (studyId: string) => {
+    if (!confirm("Delete this study and all its topics?")) return;
+
+    try {
+      const { deleteStudy: deleteStudyFn } = await import("../lib/profiles");
+      await deleteStudyFn(studyId);
+      setStudies((prev) => prev.filter((study) => study.id !== studyId));
+      setProgressEntries((prev) => {
+        return Object.fromEntries(
+          Object.entries(prev).filter(([id]) => id !== studyId),
+        );
+      });
+      setActiveStudy((current) => (current === studyId ? null : current));
+    } catch (err) {
+      console.error("Failed to delete study:", err);
+      alert("Failed to delete study.");
     }
   };
 
@@ -274,7 +284,6 @@ export default function StudyProgress({
         bio: editBio || undefined,
       });
 
-      setProfileDirty(false);
       setShowEditProfile(false);
       alert("Profile updated!");
     } catch (err) {
@@ -515,14 +524,9 @@ export default function StudyProgress({
                   return next;
                 });
               }}
-              onSelect={() => setActiveStudy(study.id)}
+              onDelete={() => deleteStudy(study.id)}
               onAddTopic={() => setShowAddTopic(showAddTopic === study.id ? null : study.id)}
-              onDelete={() => {
-                if (confirm(`Delete "${study.title}" and all its topics?`)) {
-                  // Delete study
-                }
-              }}
-              onCreateTopic={(name) => createTopic(study.id)}
+              onCreateTopic={() => createTopic(study.id)}
               onUpdateTopicStatus={updateTopicStatus}
               onDeleteTopic={deleteTopic}
               showAddTopicForm={showAddTopic === study.id}
@@ -607,9 +611,8 @@ function StudyCard({
   isExpanded,
   isActive,
   onToggle,
-  onSelect,
-  onAddTopic,
   onDelete,
+  onAddTopic,
   onCreateTopic,
   onUpdateTopicStatus,
   onDeleteTopic,
@@ -625,10 +628,9 @@ function StudyCard({
   isExpanded: boolean;
   isActive: boolean;
   onToggle: () => void;
-  onSelect: () => void;
-  onAddTopic: () => void;
   onDelete: () => void;
-  onCreateTopic: (name: string) => void;
+  onAddTopic: () => void;
+  onCreateTopic: () => void;
   onUpdateTopicStatus: (id: string, studyId: string, status: ProgressEntry["status"]) => void;
   onDeleteTopic: (id: string, studyId: string) => void;
   showAddTopicForm: boolean;
@@ -638,8 +640,6 @@ function StudyCard({
   newTopicNotes: string;
   setNewTopicNotes: (v: string) => void;
 }) {
-  const statusIcon = statusConfig[entries[0]?.status || "not_started"].icon;
-
   return (
     <div
       className={`rounded-xl border transition-all ${
@@ -680,15 +680,9 @@ function StudyCard({
               style={{ width: `${study.progress_percentage}%` }}
             />
           </div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect();
-            }}
-            className="rounded p-1 text-muted transition-colors hover:text-foreground"
-          >
+          <span className="rounded p-1 text-muted" aria-hidden="true">
             {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-          </button>
+          </span>
         </div>
       </button>
 
@@ -699,6 +693,17 @@ function StudyCard({
           {study.description && (
             <p className="text-sm text-muted">{study.description}</p>
           )}
+
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={onDelete}
+              className="flex items-center gap-1 text-xs text-red transition-colors hover:text-red/80"
+            >
+              <Trash2 size={12} />
+              Delete study
+            </button>
+          </div>
 
           {/* Topics List */}
           <div>
@@ -794,7 +799,7 @@ function StudyCard({
                 onChange={(e) => setNewTopicName(e.target.value)}
                 className="w-full rounded-md border border-border bg-surface-2 px-3 py-2 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") onCreateTopic(newTopicName);
+                  if (e.key === "Enter") onCreateTopic();
                 }}
               />
               <textarea
@@ -812,7 +817,7 @@ function StudyCard({
                   Cancel
                 </button>
                 <button
-                  onClick={() => onCreateTopic(newTopicName)}
+                  onClick={onCreateTopic}
                   className="rounded bg-accent px-3 py-1 text-xs font-medium text-white transition-colors hover-red"
                 >
                   Add Topic

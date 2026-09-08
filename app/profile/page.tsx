@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   LogIn,
@@ -15,6 +14,8 @@ import {
   Loader2,
 } from "lucide-react";
 import StudyProgress from "../../src/components/StudyProgress";
+import { supabaseAuth } from "../../src/lib/supabaseClient";
+import { getUserProfile } from "../../src/lib/profiles";
 
 type AuthMode = "login" | "signup";
 
@@ -39,7 +40,6 @@ interface ProfileData {
 }
 
 export default function ProfilePage() {
-  const router = useRouter();
   const [mode, setMode] = useState<AuthMode>("login");
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<UserSession | null>(null);
@@ -55,11 +55,12 @@ export default function ProfilePage() {
   // Check for existing session on mount
   const checkSession = useCallback(async () => {
     try {
-      const res = await fetch("/api/user");
-      const data = await res.json();
+      const { data, error } = await supabaseAuth.getUser();
+      if (error) throw error;
+
       if (data.user) {
-        setSession(data.user);
-        setProfile(data.profile);
+        setSession({ id: data.user.id, email: data.user.email ?? "" });
+        setProfile(await getUserProfile(data.user.id));
         setShowProgress(true);
       }
     } catch (err) {
@@ -68,7 +69,7 @@ export default function ProfilePage() {
   }, []);
 
   useEffect(() => {
-    checkSession();
+    queueMicrotask(() => void checkSession());
   }, [checkSession]);
 
   const validateForm = (): boolean => {
@@ -105,17 +106,14 @@ export default function ProfilePage() {
     }
 
     try {
-      const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/signup";
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, full_name: fullName }),
-      });
+      const { error } = mode === "login"
+        ? await supabaseAuth.signIn(email, password)
+        : await supabaseAuth.signUp(email, password, {
+            full_name: fullName,
+          });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setErrors({ general: data.error || "Something went wrong" });
+      if (error) {
+        setErrors({ general: error.message });
         setLoading(false);
         return;
       }
@@ -133,7 +131,8 @@ export default function ProfilePage() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      const { error } = await supabaseAuth.signOut();
+      if (error) throw error;
       setSession(null);
       setProfile(null);
       setShowProgress(false);
