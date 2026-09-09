@@ -1,9 +1,10 @@
-// import Image from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import Header from "../src/components/Header";
 import Footer from "../src/components/Footer";
 import { getSemesters } from "../src/lib/data";
+import bitmHomepageImage from "./bitmhomepage.png";
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +46,7 @@ export default async function Home() {
         />
 
         <div className="relative flex flex-col items-center justify-center gap-12 lg:items-start lg:gap-16">
-          <div className="max-w-xl lg:max-w-none">
+          <div className="max-w-xl lg:max-w-[53%]">
             <h1 className="hero-title mt-0 text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
               <span className="inline-block">
                 Your <span className="text-accent">simple</span> guide
@@ -89,22 +90,19 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Quote card — stacked below hero on mobile, floating at right on desktop */}
-        <div className="relative mt-2 flex w-full justify-center lg:absolute lg:right-0 lg:top-1/2 lg:mt-0 lg:h-96 lg:w-80 lg:-translate-y-1/2">
-          <div className="flex h-full w-full max-w-xs flex-col items-center justify-center rounded-2xl border border-accent-2/30 bg-surface/90 p-8 shadow-lg shadow-accent-2/10 transition-shadow duration-300 hover:shadow-xl lg:max-w-none">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-2/15 text-accent-2">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 12a8 8 0 1 1 16 0a8 8 0 0 1-16 0" />
-                <path d="M12 8v4M12 16h.01" />
-              </svg>
-            </div>
-            <blockquote className="mt-5 text-center text-base font-semibold leading-relaxed">
-              “All power is within you; you can do anything and everything.”
-              <footer className="mt-3 text-sm text-muted">
-                — Swami Vivekananda
-              </footer>
-            </blockquote>
-          </div>
+        <div className="group relative mt-2 h-[28rem] w-full max-w-xs isolate overflow-hidden rounded-2xl border border-accent-2/30 bg-transparent shadow-lg shadow-accent-2/10 transition-shadow duration-500 hover:border-accent/60 hover:shadow-2xl hover:shadow-accent/30 sm:h-[32rem] lg:absolute lg:right-10 lg:top-1/2 lg:mt-0 lg:h-[31rem] lg:w-[24rem] lg:max-w-none lg:-translate-y-1/2">
+          <Image
+            src={bitmHomepageImage}
+            alt="BITM student choosing exam preparation, syllabus, videos, and notes"
+            fill
+            preload
+            sizes="(max-width: 639px) min(100vw - 3rem, 20rem), (max-width: 1023px) 20rem, 24rem"
+            className="object-contain"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-accent/10 via-transparent to-accent-2/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          />
         </div>
       </section>
 
