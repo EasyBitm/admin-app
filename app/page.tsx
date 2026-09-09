@@ -30,12 +30,11 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col flex-1">
-      <Header />
+      <div className="flex h-svh flex-col">
+        <Header />
 
-      <section className="relative mx-auto my-5 w-[calc(100%-2rem)] max-w-6xl overflow-hidden rounded-3xl border border-border bg-surface/70 px-6 py-20 shadow-2xl shadow-black/20 sm:my-8 sm:w-[calc(100%-3rem)] sm:py-28 lg:py-36">
-        {/* Decorative orbs */}
-        <div aria-hidden="true" className="absolute right-[-10%] top-[-20%] h-72 w-72 rounded-full bg-accent-2/25 blur-3xl" />
-        <div aria-hidden="true" className="absolute left-[-8%] bottom-[-10%] h-56 w-56 rounded-full bg-accent/10 blur-3xl" />
+        <section className="relative mx-auto my-5 flex-1 w-[calc(100%-2rem)] max-w-6xl overflow-hidden rounded-3xl bg-background px-6 py-20 shadow-2xl shadow-black/20 sm:my-8 sm:w-[calc(100%-3rem)] sm:py-28 lg:py-36">
+       
         <div
           aria-hidden="true"
           className="absolute left-1/2 top-20 h-2 w-2 rounded-full bg-accent animate-pulse"
@@ -90,7 +89,7 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="group relative mt-2 h-[28rem] w-full max-w-xs isolate overflow-hidden rounded-2xl border border-accent-2/30 bg-transparent shadow-lg shadow-accent-2/10 transition-shadow duration-500 hover:border-accent/60 hover:shadow-2xl hover:shadow-accent/30 sm:h-[32rem] lg:absolute lg:right-10 lg:top-1/2 lg:mt-0 lg:h-[31rem] lg:w-[24rem] lg:max-w-none lg:-translate-y-1/2">
+        <div className="relative mt-2 h-[28rem] w-full max-w-xs isolate overflow-hidden rounded-2xl bg-transparent transition-transform duration-200 hover:scale-[1.02] sm:h-[32rem] lg:absolute lg:right-10 lg:top-1/2 lg:mt-0 lg:h-[31rem] lg:w-[24rem] lg:max-w-none lg:-translate-y-1/2">
           <Image
             src={bitmHomepageImage}
             alt="BITM student choosing exam preparation, syllabus, videos, and notes"
@@ -99,12 +98,9 @@ export default async function Home() {
             sizes="(max-width: 639px) min(100vw - 3rem, 20rem), (max-width: 1023px) 20rem, 24rem"
             className="object-contain"
           />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-accent/10 via-transparent to-accent-2/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          />
         </div>
-      </section>
+        </section>
+      </div>
 
       <section id="semesters" className="mx-auto min-h-screen w-full max-w-6xl px-6 py-16">
         <h2 className="text-2xl mt-10 font-semibold">Semesters</h2>
