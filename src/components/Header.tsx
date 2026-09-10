@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Award, ChevronDown, LogIn, Menu, Moon, Sun, X } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
@@ -276,19 +277,50 @@ const mobileLinkClass =
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [footerVisible, setFooterVisible] = useState(false);
+  const router = useRouter();
   const closeMenu = () => setMenuOpen(false);
 
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setFooterVisible(entry.isIntersecting),
+      { threshold: 0 },
+    );
+
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <header className="sticky top-0 z-10 border-b border-border bg-background/80 backdrop-blur">
+    <header
+      className={`sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur transition-transform duration-300 ${
+        footerVisible ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center gap-2">
+        <Link
+          href="/"
+          onClick={(event) => {
+            event.preventDefault();
+            closeMenu();
+            if (window.location.pathname === "/") {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            } else {
+              router.push("/");
+            }
+          }}
+          className="flex items-center gap-2"
+        >
           <Image
             src="/logo.png"
             alt="easyBITM"
             width={64}
             height={32}
             priority
-            className="hidden [html[data-theme='dark']_&]:block"
+            className="hidden h-20 w-auto object-contain [html[data-theme='dark']_&]:block"
           />
           <Image
             src="/logo-light.png"
@@ -296,7 +328,7 @@ export default function Header() {
             width={64}
             height={32}
             priority
-            className="hidden [html[data-theme='light']_&]:block"
+            className="hidden h-20 w-auto object-contain [html[data-theme='light']_&]:block"
           />
         </Link>
         <nav className="hidden items-center gap-8 sm:flex">

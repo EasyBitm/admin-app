@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Mail } from "lucide-react";
 import {
   FaFacebookF,
@@ -8,17 +11,20 @@ import {
 } from "react-icons/fa6";
 
 const footerLinks = {
+  Semesters: [
+    { label: "1st Semester", href: "/semester/first" },
+    { label: "2nd Semester", href: "/semester/second" },
+  ],
   Explore: [
     { label: "Home", href: "/" },
-    { label: "Semesters", href: "/#semesters" },
     { label: "CMAT preparation", href: "/cmat" },
     { label: "Notices", href: "/notices" },
   ],
-  Community: [
-    { label: "Why easyBITM?", href: "/#why" },
-    { label: "Support us", href: "/#contact" },
-    { label: "Send feedback", href: "mailto:easybitm@gmail.com" },
-  ],
+  // Community: [
+  //   { label: "Why easyBITM?", href: "/#why" },
+  //   { label: "Support us", href: "/#contact" },
+  //   { label: "Send feedback", href: "mailto:easybitm@gmail.com" },
+  // ],
 };
 
 const socialLinks = [
@@ -28,52 +34,52 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  function handleHomeClick(event: React.MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
+
+    if (pathname === "/") {
+      window.history.replaceState(null, "", "/");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      router.push("/");
+    }
+  }
+
   return (
-    <footer className="border-t border-border" aria-labelledby="footer-heading">
-      <div className="mx-auto grid w-full max-w-6xl gap-12 px-6 py-12 md:grid-cols-[1.3fr_2fr]">
-        <div className="max-w-sm">
-          <Link href="/" className="inline-flex items-center" aria-label="easyBITM home">
+    <footer className="border-t border-border w-full" aria-labelledby="footer-heading">
+      <div className="mx-auto flex w-[calc(100%-10rem)]  flex-col justify-between gap-12 px-6 py-12 md:flex-row md:gap-0">
+        <div className="flex max-w-sm flex-col items-center md:w-1/3">
+          <Link href="/" onClick={handleHomeClick} className="inline-flex items-center" aria-label="easyBITM home">
             <Image
               src="/logo.png"
               alt="easyBITM"
               width={96}
               height={28}
-              className="hidden [html[data-theme='dark']_&]:block"
+              className="hidden h-24 w-auto object-contain [html[data-theme='dark']_&]:block"
             />
             <Image
               src="/logo-light.png"
               alt="easyBITM"
               width={128}
               height={32}
-              className="hidden [html[data-theme='light']_&]:block"
+              className="hidden h-24 w-auto object-contain [html[data-theme='light']_&]:block"
             />
           </Link>
-          <h2 id="footer-heading" className="sr-only">easyBITM footer</h2>
+          <h2 id="footer-heading" className="sr-only mt-0">easyBITM footer</h2>
           <p className="mt-5 max-w-xs text-sm leading-6 text-muted">
             A free, student-focused resource hub for Bachelor in Information
             Technology and Management learners.
           </p>
-          <div className="mt-6 flex flex-wrap gap-2" aria-label="Social media links">
-            {socialLinks.map(({ label, href, Icon }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`easyBITM on ${label}`}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-accent hover:bg-accent hover:text-white"
-              >
-                <Icon size={17} aria-hidden="true" />
-              </a>
-            ))}
-          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
+        <div className="flex flex-wrap gap-x-6 md:w-auto">
           {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
-              <h3 className="text-sm font-semibold">{title}</h3>
-              <ul className="mt-4 flex flex-col gap-2 text-sm text-muted">
+            <div key={title} className="w-1/2 sm:w-40 sm:flex-none">
+              <h3 className="text-base font-semibold">{title}</h3>
+              <ul className="mt-4 flex flex-col gap-2 text-base text-muted">
                 {links.map(({ label, href }) => (
                   <li key={label}>
                     {href.startsWith("mailto:") ? (
@@ -89,7 +95,25 @@ export default function Footer() {
                 ))}
               </ul>
             </div>
-          ))}
+          ))}          
+          <div className="w-1/2 sm:w-30 sm:flex-none">
+            <h3 className="text-base font-semibold">Follow us</h3>
+            <div className="mt-4 flex flex-col gap-2 text-base text-muted" aria-label="Social media links">
+              {socialLinks.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`easyBITM on ${label}`}
+                  className="inline-flex items-center gap-2 transition-colors hover:text-foreground"
+                >
+                  <Icon size={14} aria-hidden="true" />
+                  {label}
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
       <div className="border-t border-border">
